@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNES Packaging Requirements Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .category {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .category-header {
+            background-color: #f5f5f5;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .category-header:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .category-content {
+            display: none;
+            padding: 15px;
+            background-color: #fff;
+        }
+        
+        .active .category-content {
+            display: block;
+        }
+        
+        .active .toggle::after {
+            content: "▼";
+        }
+        
+        .toggle::after {
+            content: "►";
+            font-size: 12px;
+        }
+        
+        ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background-color: #ffffcc;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .note {
+            font-style: italic;
+            color: #666;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-top: 3px;
+            margin-right: 10px;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            height: 20px;
+            margin-top: 10px;
+        }
+        
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        
+        .sharing-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .button:hover {
+            background-color: #45a049;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .sync-info {
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            padding: 10px;
+            margin-top: 15px;
+        }
+        
+        .warning {
+            color: #856404;
+            background-color: #fff3cd;
+            border-left: 6px solid #ffeeba;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        /* New styles for custom checkbox functionality */
+        .add-item-container {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px dashed #ccc;
+        }
+        
+        .add-item-container input[type="text"] {
+            width: calc(100% - 110px);
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .add-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .add-button:hover {
+            background-color: #0b7dda;
+        }
+        
+        .custom-items-container {
+            margin-top: 15px;
+        }
+        
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 3px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Packaging Requirements Document</h1>
+    
+    <div class="category active">
+        <div class="category-header">
+            Current Products <span class="toggle"></span>
+        </div>
+        <div class="category-content">
+            <ul>
+                <li>Store Bags</li>
+                <li>E-Commerce Bags in a large size only</li>
+                <li>Tissue Paper</li>
+                <li>Stickers</li>
+            </ul>
+            <p class="note">You do not currently use an E-Commerce Box.</p>
+            
+            <!-- Custom items container -->
+            <div class="custom-items-container" id="current-products-custom"></div>
+            
+            <!-- Add new item container -->
+            <div class="add-item-container">
+                <input type="text" placeholder="Add new requirement..." id="current-products-new-item">
+                <button class="add-button" onclick="addCustomItem('current-products')">Add Item</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="category">
+        <div class="category-header">
+            New Requirements <span class="toggle"></span>
+        </div>
+        <div class="category-content">
+            <div class="checkbox-item">
+                <input type="checkbox" id="req1" class="save-checkbox" data-id="req1">
+                <label for="req1">Develop a smaller E-Commerce Bag size</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="req2" class="save-checkbox" data-id="req2">
+                <label for="req2">Develop an E-Commerce Box, for larger deliveries (larger than your current E-Commerce Bag)</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="req3" class="save-checkbox" data-id="req3">
+                <label for="req3">Continue to use Tissue Paper & Sticker</label>
+            </div>
+            
+            <!-- Custom items container -->
+            <div class="custom-items-container" id="new-requirements-custom"></div>
+            
+            <!-- Add new item container -->
+            <div class="add-item-container">
+                <input type="text" placeholder="Add new requirement..." id="new-requirements-new-item">
+                <button class="add-button" onclick="addCustomItem('new-requirements')">Add Item</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="category">
+        <div class="category-header">
+            Projected Volumes <span class="toggle"></span>
+        </div>
+        <div class="category-content">
+            <p>You are projecting up to <span class="highlight">1000 deliveries a day</span> by end of summer.</p>
+            <ul>
+                <li>Approx E-Commerce Bag Volume = <span class="highlight">50,000</span> (usage period to be confirmed, e.g. per season / month / year), as well as the split across small / large bag size.</li>
+                <li>Approx E-Commerce Box Volume = <span class="highlight">2000</span> (usage period to be confirmed, e.g. per season / month / year)</li>
+                <li>Stickers - <span class="highlight">50,000</span> (usage period to be confirmed, e.g. per season / month / year)</li>
+                <li>Tissue Paper – Usage TBC</li>
+            </ul>
+            
+            <!-- Custom items container -->
+            <div class="custom-items-container" id="projected-volumes-custom"></div>
+            
+            <!-- Add new item container -->
+            <div class="add-item-container">
+                <input type="text" placeholder="Add new requirement..." id="projected-volumes-new-item">
+                <button class="add-button" onclick="addCustomItem('projected-volumes')">Add Item</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="category">
+        <div class="category-header">
+            Design <span class="toggle"></span>
+        </div>
+        <div class="category-content">
+            <ul>
+                <li>You are potentially looking to change the design / logo.</li>
+                <li>In terms of box construction you are open to advice / suggestion</li>
+            </ul>
+            
+            <!-- Custom items container -->
+            <div class="custom-items-container" id="design-custom"></div>
+            
+            <!-- Add new item container -->
+            <div class="add-item-container">
+                <input type="text" placeholder="Add new requirement..." id="design-new-item">
+                <button class="add-button" onclick="addCustomItem('design')">Add Item</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="category">
+        <div class="category-header">
+            Sustainability <span class="toggle"></span>
+        </div>
+        <div class="category-content">
+            <p>This is a key focus and the following need to be considered:</p>
+            <div class="checkbox-item">
+                <input type="checkbox" id="sus1" class="save-checkbox" data-id="sus1">
+                <label for="sus1">FSC Board</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="sus2" class="save-checkbox" data-id="sus2">
+                <label for="sus2">No Plastics</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="sus3" class="save-checkbox" data-id="sus3">
+                <label for="sus3">Water Based Glues</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="sus4" class="save-checkbox" data-id="sus4">
+                <label for="sus4">Consideration on Ink/Dyes used</label>
+            </div>
+            
+            <!-- Custom items container -->
+            <div class="custom-items-container" id="sustainability-custom"></div>
+            
+            <!-- Add new item container -->
+            <div class="add-item-container">
+                <input type="text" placeholder="Add new requirement..." id="sustainability-new-item">
+                <button class="add-button" onclick="addCustomItem('sustainability')">Add Item</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="category">
+        <div class="category-header">
+            Next Steps <span class="toggle"></span>
+        </div>
+        <div class="category-content">
+            <div class="checkbox-item">
+                <input type="checkbox" id="step1" class="save-checkbox" data-id="step1">
+                <label for="step1">Send around 3 of your current E-Commerce Bags to TPS at the following address: FAO Josh Westwood, The Tythe Barn, High Street, Edlesborough, Buckinghamshire LU6 2HS.</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="step2" class="save-checkbox" data-id="step2">
+                <label for="step2">Send samples of any current stickers and tissue paper.</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="step3" class="save-checkbox" data-id="step3">
+                <label for="step3">Upon receipt of these samples, understand the existing 'large' bag size needed, and suggest a smaller bag size, and a larger box size.</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="step4" class="save-checkbox" data-id="step4">
+                <label for="step4">Re-group and agree next steps.</label>
+            </div>
+            
+            <!-- Custom items container -->
+            <div class="custom-items-container" id="next-steps-custom"></div>
+            
+            <!-- Add new item container -->
+            <div class="add-item-container">
+                <input type="text" placeholder="Add new requirement..." id="next-steps-new-item">
+                <button class="add-button" onclick="addCustomItem('next-steps')">Add Item</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="progress-container">
+        <div>Overall Progress:</div>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
+        <div class="progress-text" id="progressText">0%</div>
+    </div>
+    
+    <div class="sharing-container">
+        <h3>Team Sharing Options</h3>
+        
+        <div class="sync-info">
+            <p><strong>Last Updated:</strong> <span id="lastUpdated">Never</span></p>
+        </div>
+        
+        <h4>Share Progress with Team</h4>
+        <button id="exportBtn" class="button">Export Progress Data</button>
+        <button id="copyLinkBtn" class="button">Copy Link with Progress</button>
+        
+        <p>Share the exported data or link with team members to sync progress</p>
+        
+        <hr>
+        
+        <h4>Import Team Progress</h4>
+        <textarea id="importData" class="input-field" style="height: 100px;" placeholder="Paste team progress data here..."></textarea>
+        <button id="importBtn" class="button">Import Progress</button>
+        
+        <div class="warning">
+            <p><strong>Note:</strong> When you import progress, it will overwrite your current progress.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Toggle sections
+        document.querySelectorAll('.category-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.parentElement.classList.toggle('active');
+            });
+        });
+        
+        // Get all checkboxes
+        let checkboxes = document.querySelectorAll('.save-checkbox');
+        
+        // Generate unique ID
+        function generateUniqueId() {
+            return 'custom_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        }
+        
+        // Store custom items
+        let customItems = {};
+        
+        // Add custom item
+        function addCustomItem(sectionId) {
+            const textInput = document.getElementById(`${sectionId}-new-item`);
+            const text = textInput.value.trim();
+            
+            if (text) {
+                const uniqueId = generateUniqueId();
+                const customContainer = document.getElementById(`${sectionId}-custom`);
+                
+                // Create new checkbox item
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'checkbox-item';
+                itemDiv.setAttribute('data-custom-id', uniqueId);
+                
+                // Create checkbox
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = uniqueId;
+                checkbox.className = 'save-checkbox custom-checkbox';
+                checkbox.setAttribute('data-id', uniqueId);
+                checkbox.addEventListener('change', () => {
+                    updateProgress();
+                    
+                    const now = new Date().toLocaleString();
+                    document.getElementById('lastUpdated').textContent = now + ' (local update)';
+                    
+                    // Update custom items data
+                    customItems[uniqueId].checked = checkbox.checked;
+                });
+                
+                // Create label
+                const label = document.createElement('label');
+                label.htmlFor = uniqueId;
+                label.textContent = text;
+                
+                // Create delete button
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-button';
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', () => {
+                    // Remove from DOM
+                    itemDiv.remove();
+                    
+                    // Remove from custom items
+                    delete customItems[uniqueId];
+                    
+                    // Update checkboxes collection
+                    checkboxes = document.querySelectorAll('.save-checkbox');
+                    
+                    // Update progress
+                    updateProgress();
+                    
+                    const now = new Date().toLocaleString();
+                    document.getElementById('lastUpdated').textContent = now + ' (item deleted)';
+                });
+                
+                // Append elements
+                itemDiv.appendChild(checkbox);
+                itemDiv.appendChild(label);
+                itemDiv.appendChild(deleteButton);
+                
+                // Add to container
+                customContainer.appendChild(itemDiv);
+                
+                // Store custom item data
+                customItems[uniqueId] = {
+                    section: sectionId,
+                    text: text,
+                    checked: false
+                };
+                
+                // Clear input
+                textInput.value = '';
+                
+                // Update checkboxes collection
+                checkboxes = document.querySelectorAll('.save-checkbox');
+                
+                // Update progress
+                updateProgress();
+                
+                const now = new Date().toLocaleString();
+                document.getElementById('lastUpdated').textContent = now + ' (item added)';
+            }
+        }
+        
+        // Handle pressing Enter key in input fields
+        document.querySelectorAll('input[type="text"][id$="-new-item"]').forEach(input => {
+            input.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    const sectionId = input.id.replace('-new-item', '');
+                    addCustomItem(sectionId);
+                }
+            });
+        });
+        
+        // Check URL for progress data when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            tryLoadFromUrl();
+            updateProgress();
+        });
+        
+        // Function to try loading progress from URL
+        function tryLoadFromUrl() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const progressParam = urlParams.get('progress');
+                
+                if (progressParam) {
+                    const progressData = JSON.parse(decodeURIComponent(progressParam));
+                    loadProgressData(progressData);
+                    
+                    const now = new Date().toLocaleString();
+                    document.getElementById('lastUpdated').textContent = now + ' (from URL)';
+                }
+            } catch (error) {
+                console.error('Error loading progress from URL:', error);
+            }
+        }
+        
+        // Function to update progress bar
+        function updateProgress() {
+            const total = checkboxes.length;
+            const checked = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+            const percentage = total > 0 ? Math.round((checked / total) * 100) : 0;
+            
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            progressBar.style.width = percentage + '%';
+            progressText.textContent = percentage + '%';
+        }
+        
+        // Function to collect progress data
+        function collectProgressData() {
+            const progressData = {
+                checkboxes: {},
+                customItems: customItems
+            };
+            
+            // Collect standard checkboxes
+            checkboxes.forEach(checkbox => {
+                progressData.checkboxes[checkbox.dataset.id] = checkbox.checked;
+            });
+            
+            return progressData;
+        }
+        
+        // Function to load progress data
+        function loadProgressData(progressData) {
+            // Load standard checkboxes
+            if (progressData.checkboxes) {
+                checkboxes.forEach(checkbox => {
+                    const id = checkbox.dataset.id;
+                    if (progressData.checkboxes.hasOwnProperty(id)) {
+                        checkbox.checked = progressData.checkboxes[id];
+                    }
+                });
+            }
+            
+            // Load custom items
+            if (progressData.customItems) {
+                // Clear existing custom items
+                document.querySelectorAll('.custom-items-container').forEach(container => {
+                    container.innerHTML = '';
+                });
+                
+                customItems = progressData.customItems;
+                
+                // Recreate custom items in DOM
+                for (const [id, item] of Object.entries(customItems)) {
+                    const sectionId = item.section;
+                    const customContainer = document.getElementById(`${sectionId}-custom`);
+                    
+                    if (customContainer) {
+                        // Create new checkbox item
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'checkbox-item';
+                        itemDiv.setAttribute('data-custom-id', id);
+                        
+                        // Create checkbox
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.id = id;
+                        checkbox.className = 'save-checkbox custom-checkbox';
+                        checkbox.setAttribute('data-id', id);
+                        checkbox.checked = item.checked;
+                        checkbox.addEventListener('change', () => {
+                            updateProgress();
+                            
+                            const now = new Date().toLocaleString();
+                            document.getElementById('lastUpdated').textContent = now + ' (local update)';
+                            
+                            // Update custom items data
+                            customItems[id].checked = checkbox.checked;
+                        });
+                        
+                        // Create label
+                        const label = document.createElement('label');
+                        label.htmlFor = id;
+                        label.textContent = item.text;
+                        
+                        // Create delete button
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'delete-button';
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.addEventListener('click', () => {
+                            // Remove from DOM
+                            itemDiv.remove();
+                            
+                            // Remove from custom items
+                            delete customItems[id];
+                            
+                            // Update checkboxes collection
+                            checkboxes = document.querySelectorAll('.save-checkbox');
+                            
+                            // Update progress
+                            updateProgress();
+                            
+                            const now = new Date().toLocaleString();
+                            document.getElementById('lastUpdated').textContent = now + ' (item deleted)';
+                        });
+                        
+                        // Append elements
+                        itemDiv.appendChild(checkbox);
+                        itemDiv.appendChild(label);
+                        itemDiv.appendChild(deleteButton);
+                        
+                        // Add to container
+                        customContainer.appendChild(itemDiv);
+                    }
+                }
+                
+                // Update checkboxes collection
+                checkboxes = document.querySelectorAll('.save-checkbox');
+            }
+            
+            updateProgress();
+        }
+        
+        // Export button handler
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            const progressData = collectProgressData();
+            const jsonData = JSON.stringify(progressData, null, 2);
+            
+            const textArea = document.getElementById('importData');
+            textArea.value = jsonData;
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                alert('Progress data copied to clipboard! You can share this with your team.');
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                alert('Progress data ready. Please manually copy the text from the box below.');
+            }
+            
+            const now = new Date().toLocaleString();
+            document.getElementById('lastUpdated').textContent = now + ' (exported)';
+        });
+        
+        // Copy link button handler
+        document.getElementById('copyLinkBtn').addEventListener('click', () => {
+            const progressData = collectProgressData();
+            const jsonData = encodeURIComponent(JSON.stringify(progressData));
+            
+            // Get the current URL without parameters
+            const url = window.location.href.split('?')[0];
+            const fullUrl = `${url}?progress=${jsonData}`;
+            
+            // Create a temporary input to copy the URL
+            const tempInput = document.createElement('input');
+            tempInput.value = fullUrl;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            try {
+                document.execCommand('copy');
+                alert('Link with progress data copied to clipboard! You can share this link with your team.');
+            } catch (err) {
+                console.error('Failed to copy link: ', err);
+                alert('Failed to copy link. Please try the Export Progress option instead.');
+            }
+            
+            document.body.removeChild(tempInput);
+            
+            const now = new Date().toLocaleString();
+            document.getElementById('lastUpdated').textContent = now + ' (link created)';
+        });
+        
+        // Import button handler
+        document.getElementById('importBtn').addEventListener('click', () => {
+            const textArea = document.getElementById('importData');
+            const jsonData = textArea.value.trim();
+            
+            if (!jsonData) {
+                alert('Please paste the team progress data into the text area.');
+                return;
+            }
+            
+            try {
+                const progressData = JSON.parse(jsonData);
+                loadProgressData(progressData);
+                
+                const now = new Date().toLocaleString();
+                document.getElementById('lastUpdated').textContent = now + ' (imported)';
+                
+                alert('Progress data imported successfully!');
+            } catch (error) {
+                console.error('Error importing progress data:', error);
+                alert('Invalid progress data. Please check the format and try again.');
+            }
+        });
+        
+        // Add change event listeners to checkboxes
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                updateProgress();
+                
+                const now = new Date().toLocaleString();
+                document.getElementById('lastUpdated').textContent = now + ' (local update)';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,4 +1,859 @@
-// Create new checkbox item
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNES Packaging Requirements Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .category {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .category-header {
+            background-color: #f5f5f5;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .category-header:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .category-content {
+            display: none;
+            padding: 15px;
+            background-color: #fff;
+        }
+        
+        .active .category-content {
+            display: block;
+        }
+        
+        .active .toggle::after {
+            content: "▼";
+        }
+        
+        .toggle::after {
+            content: "►";
+            font-size: 12px;
+        }
+        
+        ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background-color: #ffffcc;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .note {
+            font-style: italic;
+            color: #666;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-top: 3px;
+            margin-right: 10px;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            height: 20px;
+            margin-top: 10px;
+        }
+        
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        
+        .sharing-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .button:hover {
+            background-color: #45a049;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .sync-info {
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            padding: 10px;
+            margin-top: 15px;
+        }
+        
+        .warning {
+            color: #856404;
+            background-color: #fff3cd;
+            border-left: 6px solid #ffeeba;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        /* New styles for custom checkbox functionality */
+        .add-item-container {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px dashed #ccc;
+        }
+        
+        .add-item-container input[type="text"] {
+            width: calc(100% - 110px);
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .add-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .add-button:hover {
+            background-color: #0b7dda;
+        }
+        
+        .custom-items-container {
+            margin-top: 15px;
+        }
+        
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 3px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
+        
+        /* Authentication styles */
+        .auth-container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .auth-field {
+            margin-bottom: 15px;
+        }
+        
+        .auth-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .auth-status {
+            text-align: right;
+            padding: 10px;
+            font-style: italic;
+        }
+        
+        .sign-out-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #f44336;
+        }
+        
+        .firebase-status {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: white;
+            z-index: 1000;
+        }
+        
+        .firebase-connected {
+            background-color: #4CAF50;
+        }
+        
+        .firebase-disconnected {
+            background-color: #f44336;
+        }
+        
+        .cloud-action {
+            background-color: #2196F3;
+        }
+        
+        .cloud-action:hover {
+            background-color: #0b7dda;
+        }
+        
+        .team-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <!-- Firebase connection indicator -->
+    <div id="firebaseStatus" class="firebase-status firebase-disconnected">Firebase: Connecting...</div>
+    
+    <!-- Auth status -->
+    <div id="authStatus" class="auth-status">Not signed in</div>
+    
+    <!-- Auth container (shown when not signed in) -->
+    <div id="authContainer" class="auth-container">
+        <h2 class="auth-header">Sign In to OMNES Requirements</h2>
+        
+        <div class="auth-field">
+            <label for="emailInput">Email:</label>
+            <input type="email" id="emailInput" class="input-field" placeholder="your@email.com">
+        </div>
+        
+        <div class="auth-field">
+            <label for="passwordInput">Password:</label>
+            <input type="password" id="passwordInput" class="input-field" placeholder="Your password">
+        </div>
+        
+        <div class="auth-actions">
+            <button id="signInBtn" class="button">Sign In</button>
+            <button id="signUpBtn" class="button cloud-action">Create Account</button>
+        </div>
+    </div>
+    
+    <button id="signOutBtn" class="button sign-out-btn" style="display: none;">Sign Out</button>
+    
+    <!-- Main content container (hidden until signed in) -->
+    <div id="mainContent" style="display: none;">
+        <h1>Packaging Requirements Document</h1>
+        
+        <div class="category active">
+            <div class="category-header">
+                Current Products <span class="toggle"></span>
+            </div>
+            <div class="category-content">
+                <ul>
+                    <li>Store Bags</li>
+                    <li>E-Commerce Bags in a large size only</li>
+                    <li>Tissue Paper</li>
+                    <li>Stickers</li>
+                </ul>
+                <p class="note">You do not currently use an E-Commerce Box.</p>
+                
+                <!-- Custom items container -->
+                <div class="custom-items-container" id="current-products-custom"></div>
+                
+                <!-- Add new item container -->
+                <div class="add-item-container">
+                    <input type="text" placeholder="Add new requirement..." id="current-products-new-item">
+                    <button class="add-button" onclick="addCustomItem('current-products')">Add Item</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-header">
+                New Requirements <span class="toggle"></span>
+            </div>
+            <div class="category-content">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="req1" class="save-checkbox" data-id="req1">
+                    <label for="req1">Develop a smaller E-Commerce Bag size</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="req2" class="save-checkbox" data-id="req2">
+                    <label for="req2">Develop an E-Commerce Box, for larger deliveries (larger than your current E-Commerce Bag)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="req3" class="save-checkbox" data-id="req3">
+                    <label for="req3">Continue to use Tissue Paper & Sticker</label>
+                </div>
+                
+                <!-- Custom items container -->
+                <div class="custom-items-container" id="new-requirements-custom"></div>
+                
+                <!-- Add new item container -->
+                <div class="add-item-container">
+                    <input type="text" placeholder="Add new requirement..." id="new-requirements-new-item">
+                    <button class="add-button" onclick="addCustomItem('new-requirements')">Add Item</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-header">
+                Projected Volumes <span class="toggle"></span>
+            </div>
+            <div class="category-content">
+                <p>You are projecting up to <span class="highlight">1000 deliveries a day</span> by end of summer.</p>
+                <ul>
+                    <li>Approx E-Commerce Bag Volume = <span class="highlight">50,000</span> (usage period to be confirmed, e.g. per season / month / year), as well as the split across small / large bag size.</li>
+                    <li>Approx E-Commerce Box Volume = <span class="highlight">2000</span> (usage period to be confirmed, e.g. per season / month / year)</li>
+                    <li>Stickers - <span class="highlight">50,000</span> (usage period to be confirmed, e.g. per season / month / year)</li>
+                    <li>Tissue Paper – Usage TBC</li>
+                </ul>
+                
+                <!-- Custom items container -->
+                <div class="custom-items-container" id="projected-volumes-custom"></div>
+                
+                <!-- Add new item container -->
+                <div class="add-item-container">
+                    <input type="text" placeholder="Add new requirement..." id="projected-volumes-new-item">
+                    <button class="add-button" onclick="addCustomItem('projected-volumes')">Add Item</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-header">
+                Design <span class="toggle"></span>
+            </div>
+            <div class="category-content">
+                <ul>
+                    <li>You are potentially looking to change the design / logo.</li>
+                    <li>In terms of box construction you are open to advice / suggestion</li>
+                </ul>
+                
+                <!-- Custom items container -->
+                <div class="custom-items-container" id="design-custom"></div>
+                
+                <!-- Add new item container -->
+                <div class="add-item-container">
+                    <input type="text" placeholder="Add new requirement..." id="design-new-item">
+                    <button class="add-button" onclick="addCustomItem('design')">Add Item</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-header">
+                Sustainability <span class="toggle"></span>
+            </div>
+            <div class="category-content">
+                <p>This is a key focus and the following need to be considered:</p>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="sus1" class="save-checkbox" data-id="sus1">
+                    <label for="sus1">FSC Board</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="sus2" class="save-checkbox" data-id="sus2">
+                    <label for="sus2">No Plastics</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="sus3" class="save-checkbox" data-id="sus3">
+                    <label for="sus3">Water Based Glues</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="sus4" class="save-checkbox" data-id="sus4">
+                    <label for="sus4">Consideration on Ink/Dyes used</label>
+                </div>
+                
+                <!-- Custom items container -->
+                <div class="custom-items-container" id="sustainability-custom"></div>
+                
+                <!-- Add new item container -->
+                <div class="add-item-container">
+                    <input type="text" placeholder="Add new requirement..." id="sustainability-new-item">
+                    <button class="add-button" onclick="addCustomItem('sustainability')">Add Item</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-header">
+                Next Steps <span class="toggle"></span>
+            </div>
+            <div class="category-content">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="step1" class="save-checkbox" data-id="step1">
+                    <label for="step1">Send around 3 of your current E-Commerce Bags to TPS at the following address: FAO Josh Westwood, The Tythe Barn, High Street, Edlesborough, Buckinghamshire LU6 2HS.</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="step2" class="save-checkbox" data-id="step2">
+                    <label for="step2">Send samples of any current stickers and tissue paper.</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="step3" class="save-checkbox" data-id="step3">
+                    <label for="step3">Upon receipt of these samples, understand the existing 'large' bag size needed, and suggest a smaller bag size, and a larger box size.</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="step4" class="save-checkbox" data-id="step4">
+                    <label for="step4">Re-group and agree next steps.</label>
+                </div>
+                
+                <!-- Custom items container -->
+                <div class="custom-items-container" id="next-steps-custom"></div>
+                
+                <!-- Add new item container -->
+                <div class="add-item-container">
+                    <input type="text" placeholder="Add new requirement..." id="next-steps-new-item">
+                    <button class="add-button" onclick="addCustomItem('next-steps')">Add Item</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div>Overall Progress:</div>
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText">0%</div>
+        </div>
+        
+        <div class="sharing-container">
+            <h3>Team Sharing Options</h3>
+            
+            <div class="sync-info">
+                <p><strong>Last Updated:</strong> <span id="lastUpdated">Never</span></p>
+            </div>
+            
+            <h4>Cloud Storage</h4>
+            <div>
+                <button id="saveToCloudBtn" class="button cloud-action">Save Progress to Cloud</button>
+                <button id="loadFromCloudBtn" class="button cloud-action">Load Progress from Cloud</button>
+            </div>
+            
+            <hr>
+            
+            <h4>Local Sharing</h4>
+            <button id="exportBtn" class="button">Export Progress Data</button>
+            <button id="copyLinkBtn" class="button">Copy Link with Progress</button>
+            
+            <p>Share the exported data or link with team members to sync progress</p>
+            
+            <hr>
+            
+            <h4>Team Sharing</h4>
+            <div class="team-section">
+                <p>Share progress directly with a team member:</p>
+                <div style="display: flex; margin-bottom: 15px;">
+                    <input type="email" id="shareEmailInput" class="input-field" style="flex: 1; margin-right: 10px;" placeholder="teammate@example.com">
+                    <button id="shareWithUserBtn" class="button cloud-action">Share</button>
+                </div>
+                
+                <div id="sharedWithContainer">
+                    <h5>Shared With:</h5>
+                    <ul id="sharedWithList">
+                        <!-- Will be populated dynamically -->
+                    </ul>
+                </div>
+            </div>
+            
+            <hr>
+            
+            <h4>Import Progress</h4>
+            <textarea id="importData" class="input-field" style="height: 100px;" placeholder="Paste team progress data here..."></textarea>
+            <button id="importBtn" class="button">Import Progress</button>
+            
+            <div class="warning">
+                <p><strong>Note:</strong> When you import progress, it will overwrite your current progress.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyDPtBpzDTqEibfJUhu_zDTWAXeiiTckiyc",
+          authDomain: "tps-omnes-project.firebaseapp.com",
+          projectId: "tps-omnes-project",
+          storageBucket: "tps-omnes-project.appspot.com",
+          messagingSenderId: "1047952685613",
+          appId: "1:1047952685613:web:0aefa42e4019c68a6516a4"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        
+        // Get Firebase service references
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // Firebase connection test
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Testing Firebase connection...');
+            
+            // Update the status indicator
+            const statusElement = document.getElementById('firebaseStatus');
+            
+            if (firebase.app) {
+                console.log('Firebase initialized successfully!');
+                statusElement.textContent = 'Firebase: Connected';
+                statusElement.classList.remove('firebase-disconnected');
+                statusElement.classList.add('firebase-connected');
+            } else {
+                console.error('Firebase initialization failed!');
+                statusElement.textContent = 'Firebase: Failed to connect';
+            }
+        });
+        
+        // Authentication state observer
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in
+                console.log('User signed in:', user.email);
+                document.getElementById('authStatus').textContent = `Signed in as: ${user.email}`;
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('signOutBtn').style.display = 'block';
+                document.getElementById('mainContent').style.display = 'block';
+                
+                // Load user data
+                loadUserData(user.uid);
+                
+                // Load shared progress list
+                loadSharedProgressList();
+            } else {
+                // User is signed out
+                console.log('User signed out');
+                document.getElementById('authStatus').textContent = 'Not signed in';
+                document.getElementById('authContainer').style.display = 'block';
+                document.getElementById('signOutBtn').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'none';
+            }
+        });
+        
+        // Sign in function
+        function signIn() {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    console.log('Signed in successfully');
+                })
+                .catch((error) => {
+                    console.error('Error signing in:', error);
+                    alert('Error signing in: ' + error.message);
+                });
+        }
+        
+        // Sign up function
+        function signUp() {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long');
+                return;
+            }
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Account created
+                    console.log('Account created successfully');
+                    
+                    // Add user to users collection
+                    db.collection('users').doc(userCredential.user.uid).set({
+                        email: email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error creating account:', error);
+                    alert('Error creating account: ' + error.message);
+                });
+        }
+        
+        // Sign out function
+        function signOut() {
+            auth.signOut()
+                .then(() => {
+                    console.log('Signed out successfully');
+                })
+                .catch((error) => {
+                    console.error('Error signing out:', error);
+                });
+        }
+        
+        // Save progress to Firestore
+        function saveProgressToFirebase() {
+            const user = auth.currentUser;
+            if (!user) {
+                alert('You must be signed in to save progress');
+                return;
+            }
+            
+            const progressData = collectProgressData();
+            
+            db.collection('userProgress').doc(user.uid).set({
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                progressData: progressData
+            })
+            .then(() => {
+                const now = new Date().toLocaleString();
+                document.getElementById('lastUpdated').textContent = now + ' (saved to cloud)';
+                console.log('Progress saved to Firebase');
+                alert('Progress saved to cloud successfully!');
+            })
+            .catch((error) => {
+                console.error('Error saving progress:', error);
+                alert('Error saving progress: ' + error.message);
+            });
+        }
+        
+        // Load user data from Firestore
+        function loadUserData(userId) {
+            db.collection('userProgress').doc(userId).get()
+                .then((doc) => {
+                    if (doc.exists && doc.data().progressData) {
+                        const progressData = doc.data().progressData;
+                        loadProgressData(progressData);
+                        
+                        // Get server timestamp and format it
+                        let timestamp = 'Never';
+                        if (doc.data().lastUpdated) {
+                            timestamp = doc.data().lastUpdated.toDate().toLocaleString();
+                        }
+                        
+                        document.getElementById('lastUpdated').textContent = timestamp + ' (loaded from cloud)';
+                    } else {
+                        console.log('No saved progress found for this user');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error loading progress:', error);
+                });
+        }
+        
+        // Explicitly load from cloud
+        function loadFromCloud() {
+            const user = auth.currentUser;
+            if (!user) {
+                alert('You must be signed in to load progress');
+                return;
+            }
+            
+            loadUserData(user.uid);
+            alert('Progress loaded from cloud');
+        }
+        
+        // Share progress with another user
+        function shareProgressWithUser() {
+            const user = auth.currentUser;
+            if (!user) {
+                alert('You must be signed in to share progress');
+                return;
+            }
+            
+            const shareEmail = document.getElementById('shareEmailInput').value;
+            if (!shareEmail) {
+                alert('Please enter an email address to share with');
+                return;
+            }
+            
+            // First check if user exists
+            db.collection('users').where('email', '==', shareEmail).get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        alert('User not found: ' + shareEmail + '. They must create an account first.');
+                        return;
+                    }
+                    
+                    const shareUserId = querySnapshot.docs[0].id;
+                    const progressData = collectProgressData();
+                    
+                    // Create a shared progress record
+                    db.collection('sharedProgress').add({
+                        fromUserId: user.uid,
+                        fromEmail: user.email,
+                        toUserId: shareUserId,
+                        toEmail: shareEmail,
+                        progressData: progressData,
+                        sharedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    })
+                    .then(() => {
+                        alert('Progress shared successfully with ' + shareEmail);
+                        document.getElementById('shareEmailInput').value = '';
+                        
+                        // Refresh shared list
+                        loadSharedProgressList();
+                    })
+                    .catch((error) => {
+                        console.error('Error sharing progress:', error);
+                        alert('Error sharing progress: ' + error.message);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error finding user:', error);
+                    alert('Error finding user: ' + error.message);
+                });
+        }
+        
+        // Load shared progress list
+        function loadSharedProgressList() {
+            const user = auth.currentUser;
+            if (!user) return;
+            
+            const sharedList = document.getElementById('sharedWithList');
+            sharedList.innerHTML = '';
+            
+            db.collection('sharedProgress')
+                .where('fromUserId', '==', user.uid)
+                .orderBy('sharedAt', 'desc')
+                .limit(5)
+                .get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        sharedList.innerHTML = '<li class="note">No shared progress yet</li>';
+                        return;
+                    }
+                    
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const sharedDate = data.sharedAt ? data.sharedAt.toDate().toLocaleString() : 'Unknown date';
+                        
+                        const li = document.createElement('li');
+                        li.innerHTML = `Shared with <strong>${data.toEmail}</strong> on ${sharedDate}`;
+                        sharedList.appendChild(li);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error loading shared list:', error);
+                });
+        }
+        
+        // Toggle sections
+        document.querySelectorAll('.category-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.parentElement.classList.toggle('active');
+            });
+        });
+        
+        // Get all checkboxes
+        let checkboxes = document.querySelectorAll('.save-checkbox');
+        
+        // Generate unique ID
+        function generateUniqueId() {
+            return 'custom_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        }
+        
+        // Store custom items
+        let customItems = {};
+        
+        // Add custom item
+        function addCustomItem(sectionId) {
+            const textInput = document.getElementById(`${sectionId}-new-item`);
+            const text = textInput.value.trim();
+            
+            if (text) {
+                const uniqueId = generateUniqueId();
+                const customContainer = document.getElementById(`${sectionId}-custom`);
+
+          // Create new checkbox item
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'checkbox-item';
                 itemDiv.setAttribute('data-custom-id', uniqueId);

@@ -290,6 +290,129 @@
             padding-top: 15px;
             border-top: 1px solid #ddd;
         }
+        
+        /* New styles for the updated sharing container */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .button-icon {
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .auto-save-info {
+            background-color: #e8f4f8;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #2196F3;
+        }
+
+        .advanced-options {
+            margin-top: 20px;
+        }
+
+        .local-options {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 300px;
+            z-index: 9999;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .notification.success {
+            background-color: #dff2bf;
+            color: #4F8A10;
+            border-left: 4px solid #4F8A10;
+        }
+
+        .notification.warning {
+            background-color: #FEEFB3;
+            color: #9F6000;
+            border-left: 4px solid #9F6000;
+        }
+
+        .notification.error {
+            background-color: #FFBABA;
+            color: #D8000C;
+            border-left: 4px solid #D8000C;
+        }
+
+        .notification.info {
+            background-color: #BDE5F8;
+            color: #00529B;
+            border-left: 4px solid #00529B;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+            color: inherit;
+        }
+
+        .shared-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+
+        .shared-date {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .resend-btn {
+            padding: 3px 8px;
+            font-size: 0.8em;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .resend-btn:hover {
+            background-color: #0b7dda;
+        }
+
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+
+        .error {
+            color: #D8000C;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -498,55 +621,72 @@
             <div class="progress-text" id="progressText">0%</div>
         </div>
         
+        <!-- UPDATED SHARING CONTAINER STARTS HERE -->
         <div class="sharing-container">
-            <h3>Team Sharing Options</h3>
+            <h3>Team Progress Sharing</h3>
             
             <div class="sync-info">
                 <p><strong>Last Updated:</strong> <span id="lastUpdated">Never</span></p>
             </div>
             
-            <h4>Cloud Storage</h4>
-            <div>
-                <button id="saveToCloudBtn" class="button cloud-action">Save Progress to Cloud</button>
-                <button id="loadFromCloudBtn" class="button cloud-action">Load Progress from Cloud</button>
+            <!-- Auto-save notification -->
+            <div class="auto-save-info">
+                <p>Your progress is automatically saved to the cloud when changes are made.</p>
+            </div>
+            
+            <!-- Cloud saving actions -->
+            <div class="action-buttons">
+                <button id="saveToCloudBtn" class="button cloud-action">
+                    <span class="button-icon">↑</span> Save Progress Now
+                </button>
+                <button id="loadFromCloudBtn" class="button cloud-action">
+                    <span class="button-icon">↓</span> Refresh from Cloud
+                </button>
             </div>
             
             <hr>
             
-            <h4>Local Sharing</h4>
-            <button id="exportBtn" class="button">Export Progress Data</button>
-            <button id="copyLinkBtn" class="button">Copy Link with Progress</button>
+            <!-- Team sharing -->
+            <h4>Share with Team Members</h4>
+            <div style="display: flex; margin-bottom: 15px;">
+                <input type="email" id="shareEmailInput" class="input-field" style="flex: 1; margin-right: 10px;" placeholder="teammate@example.com">
+                <button id="shareWithUserBtn" class="button cloud-action">Share</button>
+            </div>
             
-            <p>Share the exported data or link with team members to sync progress</p>
+            <div id="sharedWithContainer">
+                <h5>Shared With:</h5>
+                <ul id="sharedWithList">
+                    <!-- Will be populated dynamically -->
+                </ul>
+            </div>
             
             <hr>
             
-            <h4>Team Sharing</h4>
-            <div class="team-section">
-                <p>Share progress directly with a team member:</p>
-                <div style="display: flex; margin-bottom: 15px;">
-                    <input type="email" id="shareEmailInput" class="input-field" style="flex: 1; margin-right: 10px;" placeholder="teammate@example.com">
-                    <button id="shareWithUserBtn" class="button cloud-action">Share</button>
-                </div>
+            <!-- Advanced options toggle -->
+            <div class="advanced-options">
+                <button id="toggleAdvancedBtn" class="button">
+                    Show Advanced Options
+                </button>
                 
-                <div id="sharedWithContainer">
-                    <h5>Shared With:</h5>
-                    <ul id="sharedWithList">
-                        <!-- Will be populated dynamically -->
-                    </ul>
+                <div id="advancedOptionsContainer" style="display: none; margin-top: 15px;">
+                    <h5>Local Backup Options</h5>
+                    <div class="local-options">
+                        <button id="exportBtn" class="button">Export Progress Data</button>
+                        <button id="copyLinkBtn" class="button">Copy Link with Progress</button>
+                        
+                        <div style="margin-top: 15px;">
+                            <textarea id="importData" class="input-field" style="height: 100px;" placeholder="Paste progress data here..."></textarea>
+                            <button id="importBtn" class="button">Import Data</button>
+                        </div>
+                        
+                        <div class="warning">
+                            <p><strong>Note:</strong> Importing data will overwrite your current progress.</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <hr>
-            
-            <h4>Import Progress</h4>
-            <textarea id="importData" class="input-field" style="height: 100px;" placeholder="Paste team progress data here..."></textarea>
-            <button id="importBtn" class="button">Import Progress</button>
-            
-            <div class="warning">
-                <p><strong>Note:</strong> When you import progress, it will overwrite your current progress.</p>
             </div>
         </div>
+        <!-- UPDATED SHARING CONTAINER ENDS HERE -->
     </div>
     
     <!-- Firebase SDKs -->
@@ -679,7 +819,60 @@
                 });
         }
         
-        // Save progress to Firestore
+        // UPDATED FUNCTIONS START HERE
+        
+        // Debounce function to prevent multiple saves in quick succession
+        function debounce(func, delay) {
+            let timeout;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+        
+        // Auto-save function
+        function autoSaveProgress() {
+            const user = auth.currentUser;
+            if (!user) return;
+            
+            const progressData = collectProgressData();
+            
+            // Update save indicator
+            const savingIndicator = document.createElement('span');
+            savingIndicator.textContent = ' (Saving...)';
+            savingIndicator.id = 'savingIndicator';
+            
+            const lastUpdated = document.getElementById('lastUpdated');
+            if (document.getElementById('savingIndicator')) {
+                document.getElementById('savingIndicator').remove();
+            }
+            lastUpdated.appendChild(savingIndicator);
+            
+            // Save to Firebase
+            db.collection('userProgress').doc(user.uid).set({
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                progressData: progressData,
+                autoSaved: true
+            })
+            .then(() => {
+                if (document.getElementById('savingIndicator')) {
+                    document.getElementById('savingIndicator').remove();
+                }
+                
+                const timestamp = new Date().toLocaleString();
+                lastUpdated.textContent = timestamp + ' (auto-saved)';
+            })
+            .catch(error => {
+                console.error('Auto-save error:', error);
+                if (document.getElementById('savingIndicator')) {
+                    document.getElementById('savingIndicator').textContent = ' (Save failed)';
+                }
+            });
+        }
+        
+        // Save progress to Firestore with improved feedback
         function saveProgressToFirebase() {
             const user = auth.currentUser;
             if (!user) {
@@ -687,28 +880,45 @@
                 return;
             }
             
+            // Show saving indicator
+            const lastUpdated = document.getElementById('lastUpdated');
+            lastUpdated.innerHTML = `${lastUpdated.textContent} <span id="savingIndicator">(Saving...)</span>`;
+            
             const progressData = collectProgressData();
             
             db.collection('userProgress').doc(user.uid).set({
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-                progressData: progressData
+                progressData: progressData,
+                manualSave: true
             })
             .then(() => {
                 const now = new Date().toLocaleString();
                 document.getElementById('lastUpdated').textContent = now + ' (saved to cloud)';
-                console.log('Progress saved to Firebase');
-                alert('Progress saved to cloud successfully!');
+                
+                // Show success notification
+                showNotification('Progress saved successfully!', 'success');
             })
             .catch((error) => {
                 console.error('Error saving progress:', error);
-                alert('Error saving progress: ' + error.message);
+                const now = new Date().toLocaleString();
+                document.getElementById('lastUpdated').textContent = `${now} (save failed)`;
+                
+                // Show error notification
+                showNotification('Error saving progress: ' + error.message, 'error');
             });
         }
         
-        // Load user data from Firestore
+        // Load user data from Firestore with improved error handling
         function loadUserData(userId) {
+            // Show loading indicator
+            document.getElementById('lastUpdated').innerHTML += ' <span id="loadingIndicator">(Loading...)</span>';
+            
             db.collection('userProgress').doc(userId).get()
                 .then((doc) => {
+                    if (document.getElementById('loadingIndicator')) {
+                        document.getElementById('loadingIndicator').remove();
+                    }
+                    
                     if (doc.exists && doc.data().progressData) {
                         const progressData = doc.data().progressData;
                         loadProgressData(progressData);
@@ -719,17 +929,31 @@
                             timestamp = doc.data().lastUpdated.toDate().toLocaleString();
                         }
                         
-                        document.getElementById('lastUpdated').textContent = timestamp + ' (loaded from cloud)';
+                        const saveType = doc.data().manualSave ? 'manual save' : 'auto-save';
+                        document.getElementById('lastUpdated').textContent = timestamp + ` (${saveType})`;
+                        
+                        showNotification('Progress loaded successfully', 'success');
                     } else {
                         console.log('No saved progress found for this user');
+                        document.getElementById('lastUpdated').textContent = 'No saved progress found';
+                        
+                        // If first time user, show welcome message
+                        showNotification('Welcome! Start tracking your project requirements.', 'info');
                     }
                 })
                 .catch((error) => {
+                    if (document.getElementById('loadingIndicator')) {
+                        document.getElementById('loadingIndicator').remove();
+                    }
+                    
                     console.error('Error loading progress:', error);
+                    document.getElementById('lastUpdated').textContent = 'Error loading data';
+                    
+                    showNotification('Error loading progress: ' + error.message, 'error');
                 });
         }
         
-        // Explicitly load from cloud
+        // Explicitly load from cloud with confirmation
         function loadFromCloud() {
             const user = auth.currentUser;
             if (!user) {
@@ -737,11 +961,12 @@
                 return;
             }
             
-            loadUserData(user.uid);
-            alert('Progress loaded from cloud');
+            if (confirm('This will replace your current progress with the version saved in the cloud. Continue?')) {
+                loadUserData(user.uid);
+            }
         }
         
-        // Share progress with another user
+        // Enhanced share progress with another user
         function shareProgressWithUser() {
             const user = auth.currentUser;
             if (!user) {
@@ -755,51 +980,66 @@
                 return;
             }
             
+            // Disable the share button and show loading state
+            const shareButton = document.getElementById('shareWithUserBtn');
+            const originalText = shareButton.textContent;
+            shareButton.disabled = true;
+            shareButton.textContent = 'Sharing...';
+            
             // First check if user exists
             db.collection('users').where('email', '==', shareEmail).get()
                 .then((querySnapshot) => {
                     if (querySnapshot.empty) {
-                        alert('User not found: ' + shareEmail + '. They must create an account first.');
-                        return;
+                        // Create invitation for user who hasn't registered yet
+                        return db.collection('invitations').add({
+                            fromUserId: user.uid,
+                            fromEmail: user.email,
+                            toEmail: shareEmail,
+                            status: 'pending',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        }).then(() => {
+                            throw new Error('User not found: ' + shareEmail + '. An invitation has been sent for when they create an account.');
+                        });
                     }
                     
                     const shareUserId = querySnapshot.docs[0].id;
                     const progressData = collectProgressData();
                     
                     // Create a shared progress record
-                    db.collection('sharedProgress').add({
+                    return db.collection('sharedProgress').add({
                         fromUserId: user.uid,
                         fromEmail: user.email,
                         toUserId: shareUserId,
                         toEmail: shareEmail,
                         progressData: progressData,
                         sharedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    })
-                    .then(() => {
-                        alert('Progress shared successfully with ' + shareEmail);
-                        document.getElementById('shareEmailInput').value = '';
-                        
-                        // Refresh shared list
-                        loadSharedProgressList();
-                    })
-                    .catch((error) => {
-                        console.error('Error sharing progress:', error);
-                        alert('Error sharing progress: ' + error.message);
                     });
                 })
+                .then(() => {
+                    showNotification('Progress shared successfully with ' + shareEmail, 'success');
+                    document.getElementById('shareEmailInput').value = '';
+                    
+                    // Refresh shared list
+                    loadSharedProgressList();
+                })
                 .catch((error) => {
-                    console.error('Error finding user:', error);
-                    alert('Error finding user: ' + error.message);
+                    console.error('Error sharing progress:', error);
+                    showNotification(error.message, 'warning');
+                })
+                .finally(() => {
+                    // Re-enable the share button
+                    shareButton.disabled = false;
+                    shareButton.textContent = originalText;
                 });
         }
         
-        // Load shared progress list
+        // Enhanced load shared progress list
         function loadSharedProgressList() {
             const user = auth.currentUser;
             if (!user) return;
             
             const sharedList = document.getElementById('sharedWithList');
-            sharedList.innerHTML = '';
+            sharedList.innerHTML = '<li class="loading">Loading shared history...</li>';
             
             db.collection('sharedProgress')
                 .where('fromUserId', '==', user.uid)
@@ -812,134 +1052,82 @@
                         return;
                     }
                     
+                    sharedList.innerHTML = '';
                     querySnapshot.forEach((doc) => {
                         const data = doc.data();
                         const sharedDate = data.sharedAt ? data.sharedAt.toDate().toLocaleString() : 'Unknown date';
                         
                         const li = document.createElement('li');
-                        li.innerHTML = `Shared with <strong>${data.toEmail}</strong> on ${sharedDate}`;
+                        li.className = 'shared-item';
+                        li.innerHTML = `
+                            <div>Shared with <strong>${data.toEmail}</strong></div>
+                            <div class="shared-date">${sharedDate}</div>
+                            <button class="resend-btn" data-email="${data.toEmail}">Share Again</button>
+                        `;
+                        
+                        // Add event listener to the resend button
+                        li.querySelector('.resend-btn').addEventListener('click', function() {
+                            const email = this.getAttribute('data-email');
+                            document.getElementById('shareEmailInput').value = email;
+                            shareProgressWithUser();
+                        });
+                        
                         sharedList.appendChild(li);
                     });
                 })
                 .catch((error) => {
                     console.error('Error loading shared list:', error);
+                    sharedList.innerHTML = '<li class="error">Error loading shared history</li>';
                 });
         }
         
-        // Toggle sections
-        document.querySelectorAll('.category-header').forEach(header => {
-            header.addEventListener('click', () => {
-                header.parentElement.classList.toggle('active');
-            });
-        });
-        
-        // Get all checkboxes
-        let checkboxes = document.querySelectorAll('.save-checkbox');
-        
-        // Generate unique ID
-        function generateUniqueId() {
-            return 'custom_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-        }
-        
-        // Store custom items
-        let customItems = {};
-        
-        // Add custom item
-        function addCustomItem(sectionId) {
-            const textInput = document.getElementById(`${sectionId}-new-item`);
-            const text = textInput.value.trim();
+        // Notification system
+        function showNotification(message, type = 'info') {
+            // If there's an existing notification, remove it
+            const existingNotification = document.getElementById('notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
             
-            if (text) {
-                const uniqueId = generateUniqueId();
-                const customContainer = document.getElementById(`${sectionId}-custom`);
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.id = 'notification';
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">${message}</div>
+                <button class="notification-close">&times;</button>
+            `;
+            
+            // Add to body
+            document.body.appendChild(notification);
+            
+            // Add event listener to close button
+            notification.querySelector('.notification-close').addEventListener('click', () => {
+                notification.remove();
+            });
+            
+            // Auto-close after 5 seconds
+            setTimeout(() => {
+                if (document.getElementById('notification')) {
+                    document.getElementById('notification').remove();
+                }
+            }, 5000);
+        }
 
-          // Create new checkbox item
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'checkbox-item';
-                itemDiv.setAttribute('data-custom-id', uniqueId);
-                
-                // Create checkbox
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = uniqueId;
-                checkbox.className = 'save-checkbox custom-checkbox';
-                checkbox.setAttribute('data-id', uniqueId);
-                checkbox.addEventListener('change', () => {
-                    updateProgress();
-                    
-                    const now = new Date().toLocaleString();
-                    document.getElementById('lastUpdated').textContent = now + ' (local update)';
-                    
-                    // Update custom items data
-                    customItems[uniqueId].checked = checkbox.checked;
-                });
-                
-                // Create label
-                const label = document.createElement('label');
-                label.htmlFor = uniqueId;
-                label.textContent = text;
-                
-                // Create delete button
-                const deleteButton = document.createElement('button');
-                deleteButton.className = 'delete-button';
-                deleteButton.textContent = 'Delete';
-                deleteButton.addEventListener('click', () => {
-                    // Remove from DOM
-                    itemDiv.remove();
-                    
-                    // Remove from custom items
-                    delete customItems[uniqueId];
-                    
-                    // Update checkboxes collection
-                    checkboxes = document.querySelectorAll('.save-checkbox');
-                    
-                    // Update progress
-                    updateProgress();
-                    
-                    const now = new Date().toLocaleString();
-                    document.getElementById('lastUpdated').textContent = now + ' (item deleted)';
-                });
-                
-                // Append elements
-                itemDiv.appendChild(checkbox);
-                itemDiv.appendChild(label);
-                itemDiv.appendChild(deleteButton);
-                
-                // Add to container
-                customContainer.appendChild(itemDiv);
-                
-                // Store custom item data
-                customItems[uniqueId] = {
-                    section: sectionId,
-                    text: text,
-                    checked: false
-                };
-                
-                // Clear input
-                textInput.value = '';
-                
-                // Update checkboxes collection
-                checkboxes = document.querySelectorAll('.save-checkbox');
-                
-                // Update progress
-                updateProgress();
-                
-                const now = new Date().toLocaleString();
-                document.getElementById('lastUpdated').textContent = now + ' (item added)';
+        // Function to toggle advanced options
+        function toggleAdvancedOptions() {
+            const container = document.getElementById('advancedOptionsContainer');
+            const button = document.getElementById('toggleAdvancedBtn');
+            
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+                button.textContent = 'Hide Advanced Options';
+            } else {
+                container.style.display = 'none';
+                button.textContent = 'Show Advanced Options';
             }
         }
-        
-        // Handle pressing Enter key in input fields
-        document.querySelectorAll('input[type="text"][id$="-new-item"]').forEach(input => {
-            input.addEventListener('keyup', (event) => {
-                if (event.key === 'Enter') {
-                    const sectionId = input.id.replace('-new-item', '');
-                    addCustomItem(sectionId);
-                }
-            });
-        });
-        
-        // Check URL for progress data when the page loads
+
         document.addEventListener('DOMContentLoaded', () => {
             tryLoadFromUrl();
             updateProgress();
@@ -953,6 +1141,12 @@
             document.getElementById('saveToCloudBtn').addEventListener('click', saveProgressToFirebase);
             document.getElementById('loadFromCloudBtn').addEventListener('click', loadFromCloud);
             document.getElementById('shareWithUserBtn').addEventListener('click', shareProgressWithUser);
+            document.getElementById('toggleAdvancedBtn').addEventListener('click', toggleAdvancedOptions);
+            
+            // Set up auto-save for checkboxes
+            document.querySelectorAll('.save-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', debounce(autoSaveProgress, 2000));
+            });
             
             // Original export button
             document.getElementById('exportBtn').addEventListener('click', () => {
@@ -1166,6 +1360,121 @@
             
             updateProgress();
         }
+        
+        // Toggle sections
+        document.querySelectorAll('.category-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.parentElement.classList.toggle('active');
+            });
+        });
+        
+        // Get all checkboxes
+        let checkboxes = document.querySelectorAll('.save-checkbox');
+        
+        // Generate unique ID
+        function generateUniqueId() {
+            return 'custom_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        }
+        
+        // Store custom items
+        let customItems = {};
+        
+        // Add custom item
+        function addCustomItem(sectionId) {
+            const textInput = document.getElementById(`${sectionId}-new-item`);
+            const text = textInput.value.trim();
+            
+            if (text) {
+                const uniqueId = generateUniqueId();
+                const customContainer = document.getElementById(`${sectionId}-custom`);
+
+                // Create new checkbox item
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'checkbox-item';
+                itemDiv.setAttribute('data-custom-id', uniqueId);
+                
+                // Create checkbox
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = uniqueId;
+                checkbox.className = 'save-checkbox custom-checkbox';
+                checkbox.setAttribute('data-id', uniqueId);
+                checkbox.addEventListener('change', () => {
+                    updateProgress();
+                    
+                    const now = new Date().toLocaleString();
+                    document.getElementById('lastUpdated').textContent = now + ' (local update)';
+                    
+                    // Update custom items data
+                    customItems[uniqueId].checked = checkbox.checked;
+                });
+                
+                // Create label
+                const label = document.createElement('label');
+                label.htmlFor = uniqueId;
+                label.textContent = text;
+                
+                // Create delete button
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-button';
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', () => {
+                    // Remove from DOM
+                    itemDiv.remove();
+                    
+                    // Remove from custom items
+                    delete customItems[uniqueId];
+                    
+                    // Update checkboxes collection
+                    checkboxes = document.querySelectorAll('.save-checkbox');
+                    
+                    // Update progress
+                    updateProgress();
+                    
+                    const now = new Date().toLocaleString();
+                    document.getElementById('lastUpdated').textContent = now + ' (item deleted)';
+                });
+                
+                // Append elements
+                itemDiv.appendChild(checkbox);
+                itemDiv.appendChild(label);
+                itemDiv.appendChild(deleteButton);
+                
+                // Add to container
+                customContainer.appendChild(itemDiv);
+                
+                // Store custom item data
+                customItems[uniqueId] = {
+                    section: sectionId,
+                    text: text,
+                    checked: false
+                };
+                
+                // Clear input
+                textInput.value = '';
+                
+                // Update checkboxes collection
+                checkboxes = document.querySelectorAll('.save-checkbox');
+                
+                // Update progress
+                updateProgress();
+                
+                const now = new Date().toLocaleString();
+                document.getElementById('lastUpdated').textContent = now + ' (item added)';
+            }
+        }
+        
+        // Handle pressing Enter key in input fields
+        document.querySelectorAll('input[type="text"][id$="-new-item"]').forEach(input => {
+            input.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    const sectionId = input.id.replace('-new-item', '');
+                    addCustomItem(sectionId);
+                }
+            });
+        });
     </script>
 </body>
 </html>
+
+                
